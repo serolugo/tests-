@@ -2,32 +2,33 @@
 # TILE INFORMATION
 # =============================================================================
 
-tile_name: ""           # Display name for your tile (e.g. "32-bit Adder")
-tile_author: ""         # Your full name
-top_module: ""          # Must match your RTL filename exactly (e.g. adder_tile)
-version: ""             # Design version (e.g. "1.0.0")
+tile_name: "32-bit Accumulator"
+tile_author: "Sebastian Lugo"
+top_module: "acc_tile"
+version: "1.0.0"
 
 description: |
-  # What does your tile do?
+  32-bit accumulator tile. Adds data_reg_a to an internal register on each
+  clock cycle when accumulate is enabled. The accumulator can be cleared
+  synchronously via csr_in[1].
 
 ports: |
-  # Describe how your tile uses the SemiCoLab port convention:
-  #   clk          - clock
-  #   arst_n       - async reset, active low
-  #   csr_in[15:0] - control inputs
-  #   data_reg_a   - input data A (32-bit)
-  #   data_reg_b   - input data B (32-bit)
-  #   data_reg_c   - output data (32-bit)
-  #   csr_out[15:0]- status outputs
-  #   csr_in_re    - CSR input read enable
-  #   csr_out_we   - CSR output write enable
+  csr_in[0]  - accumulate enable (add data_reg_a to accumulator)
+  csr_in[1]  - clear accumulator (synchronous, takes priority)
+  data_reg_a - value to accumulate (32-bit)
+  data_reg_b - unused
+  data_reg_c - current accumulator value (32-bit)
+  csr_out    - mirrors csr_in[1:0] as status
 
 usage_guide: |
-  # How should this tile be used?
+  Assert csr_in[0] to accumulate data_reg_a into the internal register.
+  Assert csr_in[1] to synchronously clear the accumulator to zero.
+  csr_in[1] takes priority over csr_in[0].
+  Read the current accumulated value from data_reg_c.
 
 # =============================================================================
 # OPTIONAL
 # =============================================================================
 
-simulator: ""           # Tool used for local simulation (e.g. VeriFlow, Vivado, Quartus)
-simulator_version: ""   # Version of that tool
+simulator: "VeriFlow"
+simulator_version: "1.0.0"
