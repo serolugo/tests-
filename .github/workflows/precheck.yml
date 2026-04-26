@@ -7,6 +7,9 @@ on:
 jobs:
   precheck:
     runs-on: ubuntu-latest
+    if: github.repository != 'MifralTech/semicolab-precheck'
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout tile repo
@@ -14,10 +17,8 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Install OSS CAD Suite
-        uses: YosysHQ/setup-oss-cad-suite@v3
-        with:
-          version: '20241126'
+      - name: Install tools
+        run: sudo apt-get install -y iverilog yosys
 
       - name: Install Python dependencies
         run: pip install pyyaml weasyprint
@@ -37,7 +38,7 @@ jobs:
             --author ${{ github.actor }}
 
       - name: Commit results
-        if: always() && github.repository != 'mifral/semicolab-precheck'
+        if: always()
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
