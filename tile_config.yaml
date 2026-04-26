@@ -1,0 +1,33 @@
+# =============================================================================
+# TILE INFORMATION
+# =============================================================================
+
+tile_name: ""           # Display name for your tile (e.g. "32-bit Adder")
+tile_author: ""         # Your full name
+top_module: ""          # Must match your RTL filename exactly (e.g. adder_tile)
+version: ""             # Design version (e.g. "1.0.0")
+
+description: |
+  # What does your tile do?
+
+ports: |
+  # Describe how your tile uses the SemiCoLab port convention:
+  #   clk          - clock
+  #   arst_n       - async reset, active low
+  #   csr_in[15:0] - control inputs
+  #   data_reg_a   - input data A (32-bit)
+  #   data_reg_b   - input data B (32-bit)
+  #   data_reg_c   - output data (32-bit)
+  #   csr_out[15:0]- status outputs
+  #   csr_in_re    - CSR input read enable
+  #   csr_out_we   - CSR output write enable
+
+usage_guide: |
+  # How should this tile be used?
+
+# =============================================================================
+# OPTIONAL
+# =============================================================================
+
+simulator: ""           # Tool used for local simulation (e.g. VeriFlow, Vivado, Quartus)
+simulator_version: ""   # Version of that tool
