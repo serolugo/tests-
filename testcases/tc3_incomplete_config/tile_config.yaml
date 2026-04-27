@@ -1,0 +1,9 @@
+# TEST CASE 3: Incomplete tile_config
+# tile_author, version, ports and usage_guide are missing
+# precheck should fail at config validation
+
+tile_name: "XOR Tile"
+top_module: "xor_tile"
+
+description: |
+  Bitwise XOR of data_reg_a and data_reg_b.

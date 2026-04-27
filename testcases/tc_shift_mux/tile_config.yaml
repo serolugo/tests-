@@ -1,0 +1,25 @@
+tile_name: "Shift Mux"
+tile_author: "Sebastian Lugo"
+top_module: "shift_mux_tile"
+version: "1.0.0"
+
+description: |
+  Shift multiplexer. Shifts data_reg_a right or data_reg_b left
+  by the amount specified in csr_in[4:1]. Direction is selected
+  by csr_in[0]. Result is registered on the rising clock edge.
+
+ports: |
+  csr_in[0]   - direction select (0=left shift B, 1=right shift A)
+  csr_in[4:1] - shift amount (0-15)
+  data_reg_a  - input A, right-shifted when csr_in[0]=1 (32-bit)
+  data_reg_b  - input B, left-shifted when csr_in[0]=0 (32-bit)
+  data_reg_c  - shifted output, registered (32-bit)
+  csr_out     - mirrors csr_in[4:0] as status
+
+usage_guide: |
+  Set csr_in[0] to select direction. Set csr_in[4:1] for shift amount.
+  Provide input in data_reg_a or data_reg_b.
+  Read result from data_reg_c one cycle after asserting control.
+
+simulator: "VeriFlow"
+simulator_version: "1.0.0"

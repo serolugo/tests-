@@ -1,0 +1,22 @@
+tile_name: "Parity Checker"
+tile_author: "Sebastian Lugo"
+top_module: "parity_tile"
+version: "1.0.0"
+
+description: |
+  Computes the bitwise XOR parity of data_reg_a.
+  Output is 1 if the number of set bits is odd, 0 if even.
+
+ports: |
+  csr_in      - unused
+  data_reg_a  - input word to check parity (32-bit)
+  data_reg_b  - unused
+  data_reg_c  - parity result in bit [0] (0=even, 1=odd)
+  csr_out     - mirrors parity result in bit [0]
+
+usage_guide: |
+  Provide input word in data_reg_a.
+  Read parity result from data_reg_c[0].
+
+simulator: "VeriFlow"
+simulator_version: "1.0.0"

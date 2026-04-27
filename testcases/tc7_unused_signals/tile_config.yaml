@@ -1,0 +1,23 @@
+tile_name: "Unused Signals Demo"
+tile_author: "Sebastian Lugo"
+top_module: "unused_tile"
+version: "1.0.0"
+
+description: |
+  Demonstrates a design with declared but unused internal signals and
+  an unread input port. Functionally passes data_reg_a to data_reg_c
+  when csr_in[0] is asserted. Intended to expose the gap in lint coverage.
+
+ports: |
+  csr_in[0]  - load enable (store data_reg_a into result)
+  data_reg_a - input value to store (32-bit)
+  data_reg_b - unused input (not read by design)
+  data_reg_c - stored value output (32-bit)
+  csr_out    - mirrors csr_in[0] as status
+
+usage_guide: |
+  Assert csr_in[0] to latch data_reg_a into the output register.
+  data_reg_b is not used by this design.
+
+simulator: "VeriFlow"
+simulator_version: "1.0.0"

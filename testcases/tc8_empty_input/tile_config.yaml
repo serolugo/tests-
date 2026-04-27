@@ -1,0 +1,14 @@
+# TEST CASE 8: Empty RTL input
+# tile_config is also incomplete — but the engine should
+# fail first at RTL discovery (No .v files found in rtl/)
+# before even reading the config in full.
+# Validates that the engine handles missing input gracefully.
+
+tile_name: ""
+tile_author: ""
+top_module: ""
+version: ""
+
+description: |
+ports: |
+usage_guide: |

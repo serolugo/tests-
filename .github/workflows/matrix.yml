@@ -1,0 +1,107 @@
+name: SemiCoLab Precheck Matrix Tests
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false   # run all testcases even if one fails
+      matrix:
+        include:
+          - testcase: tc1_bad_interface
+            expected: FAIL
+          - testcase: tc2_bad_logic
+            expected: FAIL
+          - testcase: tc3_incomplete_config
+            expected: FAIL
+          - testcase: tc4_large_circuit
+            expected: PASS
+          - testcase: tc5_width_mismatch
+            expected: PASS   # warning only, not a hard fail
+          - testcase: tc6_duplicate_definitions
+            expected: FAIL
+          - testcase: tc7_unused_signals
+            expected: PASS   # gap — lint not implemented
+          - testcase: tc8_empty_input
+            expected: FAIL
+          - testcase: tc9_naming_convention
+            expected: PASS   # gap — lint not implemented
+          - testcase: tc10_borderline_valid
+            expected: PASS
+          - testcase: tc_shift_mux
+            expected: PASS
+
+    steps:
+      # ── Checkout ──────────────────────────────────────────────────────────
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # ── Install OSS CAD Suite ─────────────────────────────────────────────
+      - name: Install OSS CAD Suite
+        run: |
+          wget -q https://github.com/YosysHQ/oss-cad-suite-build/releases/download/2024-11-26/oss-cad-suite-linux-x64-20241126.tgz
+          tar -xf oss-cad-suite-linux-x64-20241126.tgz
+          echo "$PWD/oss-cad-suite/bin" >> $GITHUB_PATH
+          echo "$PWD/oss-cad-suite/lib" >> $GITHUB_PATH
+
+      # ── Install Python dependencies ───────────────────────────────────────
+      - name: Install Python dependencies
+        run: |
+          sudo apt-get install -y -q libpango-1.0-0 libpangoft2-1.0-0
+          pip install pyyaml weasyprint markdown
+
+      # ── Install netlistsvg ────────────────────────────────────────────────
+      - name: Install netlistsvg
+        run: npm install -g netlistsvg
+
+      # ── Clone precheck engine ─────────────────────────────────────────────
+      - name: Clone precheck engine
+        run: git clone https://github.com/serolugo/semicolab-precheck-engine.git _engine
+
+      # ── Run precheck on testcase ──────────────────────────────────────────
+      - name: Run precheck — ${{ matrix.testcase }}
+        id: precheck
+        run: |
+          python _engine/veriflow/cli.py precheck \
+            --repo testcases/${{ matrix.testcase }} \
+            --run-number ${{ github.run_number }} \
+            --commit ${{ github.sha }} \
+            --author "${{ github.actor }}"
+          echo "result=PASS" >> $GITHUB_OUTPUT
+        continue-on-error: true
+
+      # ── Verify result matches expected ────────────────────────────────────
+      - name: Verify result — ${{ matrix.testcase }}
+        run: |
+          ACTUAL="${{ steps.precheck.outcome }}"
+          EXPECTED="${{ matrix.expected }}"
+
+          # Map outcome to PASS/FAIL
+          if [ "$ACTUAL" = "success" ]; then
+            ACTUAL_RESULT="PASS"
+          else
+            ACTUAL_RESULT="FAIL"
+          fi
+
+          echo "Testcase : ${{ matrix.testcase }}"
+          echo "Expected : $EXPECTED"
+          echo "Actual   : $ACTUAL_RESULT"
+
+          if [ "$ACTUAL_RESULT" = "$EXPECTED" ]; then
+            echo "✅ Test PASSED — result matches expected"
+          else
+            echo "❌ Test FAILED — expected $EXPECTED but got $ACTUAL_RESULT"
+            exit 1
+          fi

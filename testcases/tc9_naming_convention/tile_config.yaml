@@ -1,0 +1,25 @@
+tile_name: "Naming Convention Demo"
+tile_author: "Sebastian Lugo"
+top_module: "MYMODULE"
+version: "1.0.0"
+
+description: |
+  Demonstrates a design with non-standard internal naming conventions.
+  Module name is uppercase without the _tile suffix. Internal signals
+  use single-letter names and generic identifiers. Interface is correct.
+  Intended to expose the gap in naming convention enforcement.
+
+ports: |
+  csr_in[0]  - operation select (0=AND, 1=ADD)
+  csr_in[1]  - unused
+  data_reg_a - operand A (32-bit)
+  data_reg_b - operand B (32-bit)
+  data_reg_c - result XORed with data_reg_a (32-bit)
+  csr_out    - mirrors csr_in[1:0] as status
+
+usage_guide: |
+  Set csr_in[0] to select ADD (1) or AND (0) of data_reg_a and data_reg_b.
+  Result is XORed with data_reg_a before output to data_reg_c.
+
+simulator: "VeriFlow"
+simulator_version: "1.0.0"

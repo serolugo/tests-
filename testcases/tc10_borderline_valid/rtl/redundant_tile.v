@@ -34,7 +34,7 @@ module redundant_tile #(
     wire [REG_WIDTH-1:0] stage4 = stage3 & 32'hFFFFFFFF; // AND all-ones is redundant
 
     // Double negation — nets to original value
-    wire enable = ~~csr_in[0];
+    wire enable = ~(~csr_in[0]);  // double negation via explicit grouping
 
     // Mux with explicit default — avoids latch, but all branches are the same
     reg [REG_WIDTH-1:0] result;
