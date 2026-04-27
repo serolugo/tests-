@@ -1,22 +1,9 @@
-tile_name: "Data Mux"
-tile_author: "Sebastian Lugo"
-top_module: "mux_tile"
-version: "1.0.0"
+# TEST CASE 3: Incomplete tile_config
+# tile_author, version, ports and usage_guide are missing
+# precheck should fail at config validation
+
+tile_name: "XOR Tile"
+top_module: "xor_tile"
 
 description: |
-  4-mode data selector. Selects between data_reg_a, data_reg_b,
-  or their sum based on csr_in[1:0].
-
-ports: |
-  csr_in[1:0] - mode select (00=A, 01=B, 10=A+B)
-  data_reg_a  - input A (32-bit)
-  data_reg_b  - input B (32-bit)
-  data_reg_c  - selected output (32-bit)
-  csr_out     - mirrors csr_in[1:0] as status
-
-usage_guide: |
-  Set csr_in[1:0] to select the output mode.
-  Read the result from data_reg_c.
-
-simulator: "VeriFlow"
-simulator_version: "1.0.0"
+  Bitwise XOR of data_reg_a and data_reg_b.
