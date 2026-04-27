@@ -1,22 +1,22 @@
-tile_name: "Parity Checker"
+tile_name: "8-bit Adder"
 tile_author: "Sebastian Lugo"
-top_module: "parity_tile"
+top_module: "adder_tile"
 version: "1.0.0"
 
 description: |
-  Computes the bitwise XOR parity of data_reg_a.
-  Output is 1 if the number of set bits is odd, 0 if even.
+  8-bit adder using a submodule. Adds the lower 8 bits of data_reg_a
+  and data_reg_b and outputs the result in data_reg_c.
 
 ports: |
-  csr_in      - unused
-  data_reg_a  - input word to check parity (32-bit)
-  data_reg_b  - unused
-  data_reg_c  - parity result in bit [0] (0=even, 1=odd)
-  csr_out     - mirrors parity result in bit [0]
+  csr_in[0]  - unused (reserved)
+  data_reg_a - operand A, lower 8 bits used (32-bit input)
+  data_reg_b - operand B, lower 8 bits used (32-bit input)
+  data_reg_c - addition result (32-bit output)
+  csr_out    - mirrors csr_in[0] as status
 
 usage_guide: |
-  Provide input word in data_reg_a.
-  Read parity result from data_reg_c[0].
+  Provide operands in data_reg_a[7:0] and data_reg_b[7:0].
+  Read the 8-bit result from data_reg_c[7:0].
 
 simulator: "VeriFlow"
 simulator_version: "1.0.0"
