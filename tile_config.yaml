@@ -1,25 +1,26 @@
-tile_name: "Naming Convention Demo"
+tile_name: "Redundant Logic Demo"
 tile_author: "Sebastian Lugo"
-top_module: "MYMODULE"
+top_module: "redundant_tile"
 version: "1.0.0"
 
 description: |
-  Demonstrates a design with non-standard internal naming conventions.
-  Module name is uppercase without the _tile suffix. Internal signals
-  use single-letter names and generic identifiers. Interface is correct.
-  Intended to expose the gap in naming convention enforcement.
+  Demonstrates a design with redundant and suboptimal logic that is
+  nonetheless functionally correct. Contains unnecessary intermediate
+  assignments, duplicate mux branches, double negation, and an
+  unnecessary pipeline register. Yosys optimizes all redundancy away.
+  Intended to confirm that borderline-valid designs pass the precheck.
 
 ports: |
-  csr_in[0]  - operation select (0=AND, 1=ADD)
-  csr_in[1]  - unused
+  csr_in[0]  - output enable (0=zero output, 1=pass result)
+  csr_in[1]  - unused selector (all branches produce same result)
   data_reg_a - operand A (32-bit)
   data_reg_b - operand B (32-bit)
-  data_reg_c - result XORed with data_reg_a (32-bit)
+  data_reg_c - sum of A and B, registered, gated by csr_in[0] (32-bit)
   csr_out    - mirrors csr_in[1:0] as status
 
 usage_guide: |
-  Set csr_in[0] to select ADD (1) or AND (0) of data_reg_a and data_reg_b.
-  Result is XORed with data_reg_a before output to data_reg_c.
+  Assert csr_in[0] to enable output. Provide operands in data_reg_a
+  and data_reg_b. Read result from data_reg_c one cycle after enable.
 
 simulator: "VeriFlow"
 simulator_version: "1.0.0"
