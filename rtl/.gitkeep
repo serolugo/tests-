@@ -1,0 +1,5 @@
+# This file is intentionally left empty.
+# TEST CASE 8: Empty RTL input
+# The rtl/ directory exists but contains no .v files.
+# The precheck should fail cleanly at the RTL discovery step
+# with a clear error message — not crash.
