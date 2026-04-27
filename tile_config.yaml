@@ -1,9 +1,28 @@
-# TEST CASE 3: Incomplete tile_config
-# tile_author, version, ports and usage_guide are missing
-# precheck should fail at config validation
-
-tile_name: "XOR Tile"
-top_module: "xor_tile"
+tile_name: "8-tap FIR Filter"
+tile_author: "Sebastian Lugo"
+top_module: "fir_tile"
+version: "1.0.0"
 
 description: |
-  Bitwise XOR of data_reg_a and data_reg_b.
+  8-tap FIR digital filter with 4 selectable coefficient sets:
+  low-pass, high-pass, band-pass, and all-pass (identity).
+  Input samples are 16-bit signed. Output is 32-bit signed with saturation.
+  Coefficient set is selected via csr_in[3:2].
+
+ports: |
+  csr_in[0]   - filter enable (shift new sample into delay line)
+  csr_in[1]   - flush (synchronous clear of delay line)
+  csr_in[3:2] - coefficient set select (00=low-pass, 01=high-pass, 10=band-pass, 11=all-pass)
+  data_reg_a  - input sample, signed 16-bit in [15:0]
+  data_reg_b  - unused
+  data_reg_c  - filtered output, signed 32-bit with saturation
+  csr_out     - mirrors csr_in[3:0] as status
+
+usage_guide: |
+  1. Select coefficient set via csr_in[3:2].
+  2. Assert csr_in[0] and provide input sample in data_reg_a[15:0] each clock cycle.
+  3. Read filtered output from data_reg_c after TAPS cycles of latency.
+  4. Assert csr_in[1] to flush the delay line before starting a new signal.
+
+simulator: "VeriFlow"
+simulator_version: "1.0.0"
