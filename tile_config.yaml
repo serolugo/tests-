@@ -1,24 +1,22 @@
-tile_name: "Shift Mux"
+tile_name: "Parity Checker"
 tile_author: "Sebastian Lugo"
-top_module: "shift_mux_tile"
+top_module: "parity_tile"
 version: "1.0.0"
 
 description: |
-  Shift multiplexer. Shifts data_reg_a right or data_reg_b left
-  by the amount specified in csr_in[4:1]. Direction is selected
-  by csr_in[0].
+  Computes the bitwise XOR parity of data_reg_a.
+  Output is 1 if the number of set bits is odd, 0 if even.
 
 ports: |
-  csr_in[0]   - direction select (0=left shift B, 1=right shift A)
-  csr_in[4:1] - shift amount (0-15)
-  data_reg_a  - input A, right-shifted when csr_in[0]=1 (32-bit)
-  data_reg_b  - input B, left-shifted when csr_in[0]=0 (32-bit)
-  data_reg_c  - shifted output (32-bit)
-  csr_out     - mirrors control word as status
+  csr_in      - unused
+  data_reg_a  - input word to check parity (32-bit)
+  data_reg_b  - unused
+  data_reg_c  - parity result in bit [0] (0=even, 1=odd)
+  csr_out     - mirrors parity result in bit [0]
 
 usage_guide: |
-  Set csr_in[0] to select direction. Set csr_in[4:1] for shift amount.
-  Provide input in data_reg_a or data_reg_b. Read result from data_reg_c.
+  Provide input word in data_reg_a.
+  Read parity result from data_reg_c[0].
 
 simulator: "VeriFlow"
 simulator_version: "1.0.0"
